@@ -1,19 +1,13 @@
 #!/usr/bin/env python3
 """
-Low-Rank SHAP Implementation - Main Module
+Low-Rank SHAP Implementation
 
-This is the primary Low-Rank SHAP implementation that provides efficient
-Shapley value computation through strategic coalition sampling.
-
-Key Features:
-- 92.3% average SHAP accuracy (verified)
-- O(nk) memory complexity
-- Model-agnostic approach
-- Standard SHAP API compatibility
+This module provides the main LowRankSHAP class - a memory-efficient
+alternative to exact Kernel SHAP with O(nk) complexity.
 """
 
-# Import the working implementation
+# Import the main implementation
 from .clean_lowrank_shap import LowRankSHAP
 
-# Re-export for backward compatibility
+# Make it available at module level
 __all__ = ['LowRankSHAP']
