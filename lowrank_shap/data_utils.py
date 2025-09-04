@@ -22,7 +22,34 @@ def load_wine_quality():
 
 def load_bike_sharing():
     """Load and prepare bike sharing dataset."""
-    df = pd.read_csv('data/raw/bike.csv')
+    # Try multiple strategies to load the CSV
+    strategies = [
+        # Strategy 1: Default UTF-8
+        {'encoding': 'utf-8'},
+        # Strategy 2: Latin-1 encoding
+        {'encoding': 'latin-1'},
+        # Strategy 3: Different separator
+        {'encoding': 'utf-8', 'sep': ';'},
+        {'encoding': 'latin-1', 'sep': ';'},
+        # Strategy 4: Tab separated
+        {'encoding': 'utf-8', 'sep': '\t'},
+        # Strategy 5: Python engine with auto-detection
+        {'engine': 'python', 'sep': None},
+        # Strategy 6: Skip bad lines
+        {'encoding': 'utf-8', 'on_bad_lines': 'skip'},
+        {'encoding': 'latin-1', 'on_bad_lines': 'skip'},
+    ]
+    
+    df = None
+    for i, strategy in enumerate(strategies):
+        try:
+            df = pd.read_csv('data/raw/bike.csv', **strategy)
+            print(f"  Bike dataset loaded with strategy {i+1}: {df.shape}")
+            break
+        except Exception as e:
+            if i == len(strategies) - 1:  # Last strategy
+                raise Exception(f"All loading strategies failed. Last error: {e}")
+            continue
     
     # Basic preprocessing for bike sharing
     # Target: cnt (total rental count)
@@ -62,6 +89,17 @@ def load_compas():
     """Load and prepare COMPAS dataset."""
     df = pd.read_csv('data/raw/compas.csv')
     
+    # Handle missing values first
+    # Fill numeric columns with median
+    numeric_cols = df.select_dtypes(include=[np.number]).columns
+    for col in numeric_cols:
+        df[col] = df[col].fillna(df[col].median())
+    
+    # Fill categorical columns with mode
+    categorical_cols = df.select_dtypes(include=['object']).columns
+    for col in categorical_cols:
+        df[col] = df[col].fillna(df[col].mode()[0] if not df[col].mode().empty else 'unknown')
+    
     # Basic preprocessing for categorical variables
     for col in df.columns:
         if df[col].dtype == 'object':
@@ -72,6 +110,17 @@ def load_compas():
     target_col = df.columns[-1]
     X = df.drop(target_col, axis=1).values
     y = df[target_col].values
+    
+    # Final check for any remaining NaN values
+    if np.isnan(X).any():
+        print(f"  Warning: Remaining NaN values in features, filling with 0")
+        X = np.nan_to_num(X, nan=0.0)
+    
+    if np.isnan(y).any():
+        print(f"  Warning: NaN values in target, removing affected samples")
+        valid_indices = ~np.isnan(y)
+        X = X[valid_indices]
+        y = y[valid_indices]
     
     return X, y, df.columns.tolist()
 

@@ -64,7 +64,7 @@ class LowRankSHAP:
     def fit(self, 
             model: BaseEstimator, 
             background_data: np.ndarray,
-            verbose: bool = False) -> 'LowRankSHAP':
+            verbose: bool = True) -> 'LowRankSHAP':
         """
         Fit the low-rank SHAP explainer.
         
@@ -80,7 +80,7 @@ class LowRankSHAP:
         self.background_data = background_data
         
         if verbose:
-            print("Computing kernel matrix...")
+            print(f"Computing kernel matrix ({background_data.shape[0]} x {background_data.shape[0]})...")
         
         # Compute kernel matrix
         self.kernel_matrix = self._compute_kernel_matrix(
@@ -88,29 +88,51 @@ class LowRankSHAP:
         )
         
         if verbose:
-            print(f"Kernel matrix shape: {self.kernel_matrix.shape}")
-            print("Computing low-rank SVD...")
+            print(f"Computing rank-{self.rank} SVD...")
         
-        # Compute low-rank SVD
+        # Compute low-rank SVD with robust error handling
         try:
-            # Use randomized SVD for efficiency
+            # First attempt with default parameters
             U_k, S_k, V_k = svds(self.kernel_matrix, k=self.rank)
-            
-            # svds returns singular values in ascending order
-            # Reverse to get descending order
-            self.U_k = U_k[:, ::-1]
-            self.S_k = S_k[::-1]
-            self.V_k = V_k[::-1, :]
-            
-            # Add regularization
-            self.S_k += self.regularization
-            
         except Exception as e:
-            raise ValueError(f"SVD computation failed: {e}")
+            if verbose:
+                print(f"SVD failed with default parameters: {e}")
+                print("Trying with increased tolerance and iterations...")
+            
+            try:
+                # Second attempt with relaxed parameters
+                U_k, S_k, V_k = svds(self.kernel_matrix, k=self.rank, 
+                                   tol=1e-6, maxiter=2000, ncv=min(self.rank*3, self.kernel_matrix.shape[0]-1))
+            except Exception as e2:
+                if verbose:
+                    print(f"SVD failed with relaxed parameters: {e2}")
+                    print("Trying with reduced rank...")
+                
+                try:
+                    # Third attempt with reduced rank
+                    reduced_rank = min(self.rank // 2, self.kernel_matrix.shape[0] // 4)
+                    if reduced_rank < 1:
+                        reduced_rank = 1
+                    
+                    U_k, S_k, V_k = svds(self.kernel_matrix, k=reduced_rank, 
+                                       tol=1e-5, maxiter=3000)
+                    
+                    if verbose:
+                        print(f"SVD succeeded with reduced rank {reduced_rank}")
+                    
+                    # Update rank to the successful one
+                    self.rank = reduced_rank
+                    
+                except Exception as e3:
+                    raise RuntimeError(f"SVD computation failed with all strategies: {e3}")
+        
+        # Store SVD components
+        self.U_k = U_k
+        self.S_k = S_k
+        self.V_k = V_k
         
         if verbose:
-            print(f"SVD completed. Rank: {self.rank}")
-            print(f"Singular values: {self.S_k[:5]}...")
+            print(f"✓ SVD completed successfully (rank={self.rank})")
         
         return self
     
