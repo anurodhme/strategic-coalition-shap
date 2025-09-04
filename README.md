@@ -9,23 +9,23 @@
 
 ## 🚀 Key Features
 
-- **Memory Efficient**: Reduces memory usage by 60-90% compared to exact Kernel SHAP
-- **High Accuracy**: Maintains >99.99% fidelity to exact Shapley values
+- **Memory Efficient**: O(nk) complexity vs O(2^n) - up to 13,981x computational reduction
+- **High Accuracy**: 88-96.6% accuracy vs exact SHAP (validated on ground truth)
 - **Model Agnostic**: Works with any machine learning model (sklearn, XGBoost, PyTorch, etc.)
-- **Production Ready**: Comprehensive testing, documentation, and pip installation
+- **Production Ready**: 100% test success rate, comprehensive validation, pip installation
 - **Reproducible**: All experiments fully reproducible with included scripts
 
-## 📊 Performance Highlights
+## Performance
 
-| Dataset | Model | Speedup | Memory Reduction | Accuracy |
-|---------|--------|---------|------------------|----------|
-| Wine Quality | Random Forest | 3.5× | 85% | 99.9999% |
-| Adult Income | SVM | 6.8× | 88% | 99.9998% |
-| COMPAS | MLP | 2.7× | 80% | 99.9999% |
+| Problem Size | Rank | Accuracy vs Exact SHAP | Speedup | Memory Usage |
+|--------------|------|------------------------|---------|---------------|
+| 8 features | 5 | 95.8% | 2.7× | <2MB |
+| 10 features | 8 | 93.0% | 7.9× | <2MB |
+| 12 features | 10 | 96.6% | 31.9× | <2MB |
 
-*Based on comprehensive evaluation across 12 experiments*
+*Based on ground truth validation and comprehensive evaluation across 39 tests*
 
-## 📦 Installation
+## Installation
 
 ### From PyPI (Recommended)
 ```bash
@@ -46,7 +46,7 @@ cd lowrank-shap
 pip install -e ".[dev]"
 ```
 
-## 🎯 Quick Start
+## Quick Start
 
 ### Basic Usage
 ```python
@@ -59,25 +59,27 @@ model = RandomForestClassifier()
 model.fit(X_train, y_train)
 
 # Create Low-Rank SHAP explainer
-explainer = LowRankSHAP(model.predict_proba, background_data=X_background)
+explainer = LowRankSHAP(rank=10, random_state=42)
+explainer.fit(model.predict_proba, X_background, verbose=False)
 
 # Explain predictions
-shap_values = explainer.explain(X_test, rank=10)
+shap_values = explainer.explain(X_test)
 
 # Access results
 print(f"Shapley values shape: {shap_values.shape}")
-print(f"Base value: {explainer.base_value_}")
+print(f"Base value: {explainer.base_value:.4f}")
 ```
 
 ### Advanced Usage
 ```python
 # Custom rank selection
-explainer = LowRankSHAP(
-    model.predict_proba,
-    background_data=X_background,
-    rank_method='auto',  # or 'manual', 'adaptive'
-    explained_variance_threshold=0.99
-)
+explainer = LowRankSHAP(rank=15, random_state=42)  # Higher rank for better accuracy
+explainer.fit(model.predict_proba, X_background, verbose=True)
+
+# Explain with metadata
+shap_values, metadata = explainer.explain_dataset(X_test)
+print(f"Runtime: {metadata['avg_runtime']:.4f}s")
+print(f"Samples used: {metadata['n_samples']}")
 
 # Cross-validation with explanations
 from lowrank_shap.benchmark import benchmark_model
@@ -155,25 +157,30 @@ open paper/lowrank-shap.pdf
 
 ## 📊 Benchmarking
 
-### Compare with Exact Kernel SHAP
+### Ground Truth Validation
 ```python
-from lowrank_shap.benchmark import compare_explainers
+# Run exact SHAP comparison (small problems only)
+python benchmarks/exact_kernel_shap.py
 
-results = compare_explainers(
-    model, X_background, X_test,
-    methods=['exact_shap', 'lowrank_shap'],
-    metrics=['accuracy', 'runtime', 'memory']
-)
+# Results: 88-96.6% accuracy vs exact SHAP
+# Speedup: 2.7x to 61.1x depending on problem size
 ```
 
-### Custom Benchmarks
+### Comprehensive Evaluation
 ```python
-from lowrank_shap.benchmark import BenchmarkSuite
+# Run full benchmark suite
+python benchmarks/enhanced_evaluation.py
 
-suite = BenchmarkSuite()
-suite.add_dataset('wine', X_wine, y_wine)
-suite.add_model('random_forest', RandomForestClassifier())
-suite.run(rank=10)
+# Tests: regression, multiclass, high-dimensional datasets
+# Validates: accuracy, runtime, memory efficiency
+```
+
+### Real-World Case Study
+```python
+# Credit risk assessment example
+python examples/real_world_case_study.py
+
+# Demonstrates: practical applicability, interpretability, scalability
 ```
 
 ## 🧪 Testing
@@ -235,7 +242,7 @@ results = benchmark_model(
 )
 ```
 
-## 📈 Examples
+## Examples
 
 ### Wine Quality Analysis
 ```python
@@ -243,23 +250,28 @@ import pandas as pd
 from lowrank_shap import LowRankSHAP
 from sklearn.ensemble import RandomForestClassifier
 
-# Load data
-df = pd.read_csv('data/raw/wine.csv')
-X = df.drop('quality', axis=1).values
-y = df['quality'].values
+# Load data using our data utilities
+from lowrank_shap.data_utils import load_wine_quality
+X, y = load_wine_quality()
 
 # Train model
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 model = RandomForestClassifier(n_estimators=100, random_state=42)
-model.fit(X, y)
+model.fit(X_train, y_train)
 
 # Explain predictions
-explainer = LowRankSHAP(model.predict_proba, background_data=X)
-shap_values = explainer.explain(X[:10], rank=10)
+explainer = LowRankSHAP(rank=10, random_state=42)
+explainer.fit(model.predict_proba, X_train[:50], verbose=False)
+shap_values = explainer.explain(X_test[:10])
 
-# Top features for high-quality wines
+# Analyze feature importance
 importance = np.abs(shap_values).mean(axis=0)
-top_features = df.columns[:-1][importance.argsort()[-5:][::-1]]
-print("Top 5 quality predictors:", top_features.tolist())
+feature_names = ['fixed_acidity', 'volatile_acidity', 'citric_acid', 'residual_sugar', 
+                'chlorides', 'free_sulfur_dioxide', 'total_sulfur_dioxide', 'density', 
+                'pH', 'sulphates', 'alcohol']
+top_features = [feature_names[i] for i in importance.argsort()[-5:][::-1]]
+print("Top 5 quality predictors:", top_features)
 ```
 
 ### COMPAS Fairness Analysis
@@ -465,7 +477,7 @@ Demonstrate that Kernel SHAP can be accelerated using low-rank SVD approximation
 - **Success Rate**: 100% - no SVD convergence failures
 - **Memory Efficiency**: Well below 1.8GB target (achieved ~207MB peak)
 
-## 📦 Installation
+## Installation
 
 ### From Source (Development)
 
@@ -630,7 +642,7 @@ The research paper is written in Quarto and can be found in `paper/paper.qmd`. B
 quarto render paper/paper.qmd --to pdf
 ```
 
-## 📦 Installation
+## Installation
 
 ```bash
 pip install -e .
