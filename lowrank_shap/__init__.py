@@ -38,7 +38,7 @@ __author__ = "Research Team"
 __email__ = "research@example.com"
 
 # Core implementations
-from .lowrank_shap import LowRankSHAP
+from .clean_lowrank_shap import LowRankSHAP
 from .baseline import KernelSHAPBaseline
 
 # Data utilities

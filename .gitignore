@@ -1,5 +1,56 @@
+# Python
 *.pyc
+*.pyo
+*.pyd
 __pycache__/
-data/raw/*
-results/*
+*.so
+*.egg
 *.egg-info/
+dist/
+build/
+
+# Data files (user preference)
+data/raw/*
+data/processed/*
+*.csv
+*.json
+*.pkl
+*.pickle
+
+# Results and outputs
+results/*
+output/*
+experiments/*
+*.log
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# IDE and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Environment
+.env
+.venv/
+venv/
+env/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.orig
+
+# OS generated
+Thumbs.db
+ehthumbs.db
+
+# Keep important result files but exclude bulk data
+!results/simple_benchmark_results.csv
+!results/README.md
