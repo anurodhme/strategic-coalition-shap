@@ -23,6 +23,20 @@ output/*
 experiments/*
 *.log
 
+# Generated plots and images
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+
+# Development and debug files
+comprehensive_validation_test.py
+COMPREHENSIVE_PROJECT_DETAIL.md
+SYSTEMATIC_VERIFICATION_CHECKLIST.md
+research_paper.md
+debug_*.py
+
 # Jupyter
 .ipynb_checkpoints/
 *.ipynb
