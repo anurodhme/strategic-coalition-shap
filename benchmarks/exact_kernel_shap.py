@@ -115,7 +115,7 @@ def validate_exact_vs_lowrank():
     from sklearn.datasets import make_classification
     from sklearn.linear_model import LogisticRegression
     from sklearn.model_selection import train_test_split
-    from lowrank_shap import LowRankSHAP
+    from strategic_coalition_shap import StrategicCoalitionSHAP
     
     print("=== EXACT SHAP VALIDATION ===")
     
@@ -153,7 +153,7 @@ def validate_exact_vs_lowrank():
                 if rank >= n_features:
                     continue
                 
-                lr_explainer = LowRankSHAP(rank=rank, random_state=42)
+                lr_explainer = StrategicCoalitionSHAP(rank=rank, random_state=42)
                 lr_explainer.fit(model.predict_proba, background, verbose=False)
                 
                 start_time = time.time()

@@ -3,7 +3,7 @@ requires = ["setuptools>=45", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "lowrank-shap"
+name = "strategic-coalition-shap"
 version = "0.1.0"
 description = "Fast Shapley value approximation using low-rank SVD"
 authors = [{name = "Research", email = "research@example.com"}]
@@ -43,12 +43,12 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/research/lowrank-shap"
-Repository = "https://github.com/research/lowrank-shap"
+Homepage = "https://github.com/research/strategic-coalition-shap"
+Repository = "https://github.com/research/strategic-coalition-shap"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["lowrank_shap*"]
+include = ["strategic_coalition_shap*"]
 
 [tool.black]
 line-length = 88
@@ -59,4 +59,4 @@ testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
-addopts = "-v --cov=lowrank_shap --cov-report=html"
+addopts = "-v --cov=strategic_coalition_shap --cov-report=html"

@@ -1,15 +1,15 @@
-# Low-Rank SHAP: Memory-Efficient Shapley Value Approximation
+# Strategic Coalition SHAP: Memory-Efficient Shapley Value Approximation
 
-[![PyPI version](https://badge.fury.io/py/lowrank-shap.svg)](https://badge.fury.io/py/lowrank-shap)
+[![PyPI version](https://badge.fury.io/py/strategic-coalition-shap.svg)](https://badge.fury.io/py/strategic-coalition-shap)
 [![Python 3.7+](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Tests](https://github.com/username/lowrank-shap/workflows/Tests/badge.svg)](https://github.com/username/lowrank-shap/actions)
+[![Tests](https://github.com/username/strategic-coalition-shap/workflows/Tests/badge.svg)](https://github.com/username/strategic-coalition-shap/actions)
 
-**Low-Rank SHAP** is a novel method that reduces Kernel SHAP memory complexity from O(n²) to O(nk) while maintaining exact-quality explanations. This breakthrough enables efficient Shapley value computation for large-scale applications using standard hardware.
+**Strategic Coalition SHAP** is a novel method that reduces Kernel SHAP memory complexity from O(n²) to O(mk) using strategic coalition sampling while maintaining high-quality explanations. This breakthrough enables efficient Shapley value computation for large-scale applications using standard hardware.
 
 ## 🚀 Key Features
 
-- **Memory Efficient**: O(nk) complexity vs O(2^n) - up to 13,981x computational reduction
+- **Memory Efficient**: O(mk) complexity where m = rank × 15 coalitions vs O(2^n) - up to 13,981x computational reduction
 - **High Accuracy**: 88-96.6% accuracy vs exact SHAP (validated on ground truth)
 - **Model Agnostic**: Works with any machine learning model (sklearn, XGBoost, PyTorch, etc.)
 - **Production Ready**: 100% test success rate, comprehensive validation, pip installation
@@ -29,20 +29,20 @@
 
 ### From PyPI (Recommended)
 ```bash
-pip install lowrank-shap
+pip install strategic-coalition-shap
 ```
 
 ### From Source
 ```bash
-git clone https://github.com/username/lowrank-shap.git
-cd lowrank-shap
+git clone https://github.com/username/strategic-coalition-shap.git
+cd strategic-coalition-shap
 pip install -e .
 ```
 
 ### Development Installation
 ```bash
-git clone https://github.com/username/lowrank-shap.git
-cd lowrank-shap
+git clone https://github.com/username/strategic-coalition-shap.git
+cd strategic-coalition-shap
 pip install -e ".[dev]"
 ```
 
@@ -50,7 +50,7 @@ pip install -e ".[dev]"
 
 ### Basic Usage
 ```python
-from lowrank_shap import LowRankSHAP
+from strategic_coalition_shap import StrategicCoalitionSHAP
 from sklearn.ensemble import RandomForestClassifier
 import numpy as np
 
@@ -58,8 +58,8 @@ import numpy as np
 model = RandomForestClassifier()
 model.fit(X_train, y_train)
 
-# Create Low-Rank SHAP explainer
-explainer = LowRankSHAP(rank=10, random_state=42)
+# Create Strategic Coalition SHAP explainer
+explainer = StrategicCoalitionSHAP(rank=10, random_state=42)
 explainer.fit(model.predict_proba, X_background, verbose=False)
 
 # Explain predictions
@@ -73,7 +73,7 @@ print(f"Base value: {explainer.base_value:.4f}")
 ### Advanced Usage
 ```python
 # Custom rank selection
-explainer = LowRankSHAP(rank=15, random_state=42)  # Higher rank for better accuracy
+explainer = StrategicCoalitionSHAP(rank=15, random_state=42)  # Higher rank for better accuracy
 explainer.fit(model.predict_proba, X_background, verbose=True)
 
 # Explain with metadata
@@ -82,11 +82,11 @@ print(f"Runtime: {metadata['avg_runtime']:.4f}s")
 print(f"Samples used: {metadata['n_samples']}")
 
 # Cross-validation with explanations
-from lowrank_shap.benchmark import benchmark_model
+from strategic_coalition_shap.benchmark import benchmark_model
 
 results = benchmark_model(
     model, X_train, y_train, X_test, y_test,
-    explainer_type='lowrank_shap',
+    explainer_type='strategic_coalition_shap',
     ranks=[5, 10, 20]
 )
 ```
@@ -118,8 +118,8 @@ This project uses the following publicly available datasets:
 ### Quick Reproduction
 ```bash
 # Clone repository
-git clone https://github.com/username/lowrank-shap.git
-cd lowrank-shap
+git clone https://github.com/username/strategic-coalition-shap.git
+cd strategic-coalition-shap
 
 # Install dependencies
 pip install -r requirements.txt
@@ -152,7 +152,7 @@ The complete research paper is available in `paper/paper.qmd`. To build:
 make paper
 
 # View paper
-open paper/lowrank-shap.pdf
+open paper/strategic-coalition-shap.pdf
 ```
 
 ## 📊 Benchmarking
@@ -199,7 +199,7 @@ pytest tests/test_integration.py -v # End-to-end tests
 
 ### Coverage Report
 ```bash
-pytest tests/ --cov=lowrank_shap --cov-report=html
+pytest tests/ --cov=strategic_coalition_shap --cov-report=html
 open htmlcov/index.html
 ```
 
@@ -207,11 +207,11 @@ open htmlcov/index.html
 
 ### Core Classes
 
-#### `LowRankSHAP`
+#### `StrategicCoalitionSHAP`
 Main explainer class for computing Shapley values.
 
 ```python
-class LowRankSHAP:
+class StrategicCoalitionSHAP:
     def __init__(self, model_fn, background_data, rank=10, **kwargs)
     def explain(self, X, **kwargs) -> np.ndarray
     def explain_instance(self, x, **kwargs) -> np.ndarray
@@ -232,11 +232,11 @@ class KernelSHAP:
 Comprehensive benchmarking across datasets and models.
 
 ```python
-from lowrank_shap.benchmark import benchmark_model
+from strategic_coalition_shap.benchmark import benchmark_model
 
 results = benchmark_model(
     model, X_train, y_train, X_test, y_test,
-    explainer_type='lowrank_shap',
+    explainer_type='strategic_coalition_shap',
     ranks=[5, 10, 15, 20],
     n_repeats=3
 )
@@ -247,11 +247,11 @@ results = benchmark_model(
 ### Wine Quality Analysis
 ```python
 import pandas as pd
-from lowrank_shap import LowRankSHAP
+from strategic_coalition_shap import StrategicCoalitionSHAP
 from sklearn.ensemble import RandomForestClassifier
 
 # Load data using our data utilities
-from lowrank_shap.data_utils import load_wine_quality
+from strategic_coalition_shap.data_utils import load_wine_quality
 X, y = load_wine_quality()
 
 # Train model
@@ -261,7 +261,7 @@ model = RandomForestClassifier(n_estimators=100, random_state=42)
 model.fit(X_train, y_train)
 
 # Explain predictions
-explainer = LowRankSHAP(rank=10, random_state=42)
+explainer = StrategicCoalitionSHAP(rank=10, random_state=42)
 explainer.fit(model.predict_proba, X_train[:50], verbose=False)
 shap_values = explainer.explain(X_test[:10])
 
@@ -276,7 +276,7 @@ print("Top 5 quality predictors:", top_features)
 
 ### COMPAS Fairness Analysis
 ```python
-from lowrank_shap import LowRankSHAP
+from strategic_coalition_shap import StrategicCoalitionSHAP
 from sklearn.linear_model import LogisticRegression
 
 # Load and preprocess COMPAS data
@@ -287,7 +287,7 @@ model = LogisticRegression()
 model.fit(X_train, y_train)
 
 # Explain predictions by demographic group
-explainer = LowRankSHAP(model.predict_proba, background_data=X_background)
+explainer = StrategicCoalitionSHAP(model.predict_proba, background_data=X_background)
 
 # Analyze fairness across racial groups
 for race in ['Caucasian', 'African-American', 'Hispanic']:
@@ -304,22 +304,22 @@ for race in ['Caucasian', 'African-American', 'Hispanic']:
 ### Environment Variables
 ```bash
 # Set number of parallel jobs
-export LOWRANK_SHAP_N_JOBS=4
+export STRATEGIC_COALITION_SHAP_N_JOBS=4
 
 # Set memory limit (GB)
-export LOWRANK_SHAP_MEMORY_LIMIT=2
+export STRATEGIC_COALITION_SHAP_MEMORY_LIMIT=2
 
 # Enable debug mode
-export LOWRANK_SHAP_DEBUG=1
+export STRATEGIC_COALITION_SHAP_DEBUG=1
 ```
 
 ### Configuration File
-Create `~/.lowrank_shap_config.json`:
+Create `~/.strategic_coalition_shap_config.json`:
 ```json
 {
   "n_jobs": 4,
   "memory_limit_gb": 2,
-  "cache_dir": "~/.lowrank_shap_cache",
+  "cache_dir": "~/.strategic_coalition_shap_cache",
   "debug": false
 }
 ```
@@ -327,10 +327,10 @@ Create `~/.lowrank_shap_config.json`:
 ## 📊 Project Structure
 
 ```
-lowrank-shap/
-├── lowrank_shap/           # Core package
+strategic-coalition-shap/
+├── strategic_coalition_shap/           # Core package
 │   ├── __init__.py
-│   ├── lowrank_shap.py     # Main algorithm
+│   ├── strategic_coalition_shap.py     # Main algorithm
 │   ├── kernel_shap.py      # Exact implementation
 │   ├── data_utils.py       # Data loading utilities
 │   └── benchmark.py        # Benchmarking utilities
@@ -363,8 +363,8 @@ We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guid
 ### Development Setup
 ```bash
 # Clone repository
-git clone https://github.com/username/lowrank-shap.git
-cd lowrank-shap
+git clone https://github.com/username/strategic-coalition-shap.git
+cd strategic-coalition-shap
 
 # Install in development mode
 pip install -e ".[dev]"
@@ -395,8 +395,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- **Issues**: [GitHub Issues](https://github.com/username/lowrank-shap/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/username/lowrank-shap/discussions)
+- **Issues**: [GitHub Issues](https://github.com/username/strategic-coalition-shap/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/username/strategic-coalition-shap/discussions)
 - **Email**: [email@domain.com]
 
 ## 📚 Citation
@@ -404,12 +404,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 If you use Low-Rank SHAP in your research, please cite:
 
 ```bibtex
-@article{lowrankshap2024,
+@article{strategiccoalitionshap2024,
   title={Low-Rank SHAP: Memory-Efficient Shapley Value Approximation via Low-Rank Kernel Decomposition},
   author={[Author Name]},
   journal={[Journal Name]},
   year={2024},
-  url={https://github.com/username/lowrank-shap}
+  url={https://github.com/username/strategic-coalition-shap}
 }
 ```
 
@@ -439,7 +439,7 @@ Datasets are stored in `data/raw/` directory but are **not included in git** due
 ```bash
 # Clone the repository
 git clone <repository-url>
-cd lowrank-shap
+cd strategic-coalition-shap
 
 # Install dependencies
 pip install -e .
@@ -452,10 +452,10 @@ python scripts/run_all.py
 ## 📋 Project Structure
 
 ```
-lowrank-shap/
+strategic-coalition-shap/
 ├── data/
 │   └── raw/          # Downloaded datasets (not in git)
-├── lowrank_shap/     # Main package
+├── strategic_coalition_shap/     # Main package
 ├── paper/            # Research paper (Quarto)
 ├── scripts/          # Experiment automation
 ├── results/          # Experiment outputs (not in git)
@@ -484,7 +484,7 @@ Demonstrate that Kernel SHAP can be accelerated using low-rank SVD approximation
 ```bash
 # Clone the repository
 git clone <repository-url>
-cd lowrank-shap
+cd strategic-coalition-shap
 
 # Install in development mode
 pip install -e .
@@ -496,7 +496,7 @@ pip install -e ".[dev]"
 ### From PyPI (Coming Soon)
 
 ```bash
-pip install lowrank-shap
+pip install strategic-coalition-shap
 ```
 
 ## 🚀 Quick Start
@@ -504,7 +504,7 @@ pip install lowrank-shap
 ### Basic Usage
 
 ```python
-from lowrank_shap import LowRankSHAP
+from strategic_coalition_shap import StrategicCoalitionSHAP
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.datasets import make_classification
 
@@ -516,7 +516,7 @@ model = RandomForestClassifier(random_state=42)
 model.fit(X, y)
 
 # Create and fit Low-Rank SHAP explainer
-explainer = LowRankSHAP(rank=10)
+explainer = StrategicCoalitionSHAP(rank=10)
 explainer.fit(model, X[:100])  # Use 100 background samples
 
 # Explain a single instance
@@ -534,7 +534,7 @@ print(f"Average runtime: {metadata_batch['avg_runtime']:.3f}s")
 ### Using Real Datasets
 
 ```python
-from lowrank_shap import load_wine_data, benchmark_comparison
+from strategic_coalition_shap import load_wine_data, benchmark_comparison
 from sklearn.ensemble import RandomForestClassifier
 
 # Load wine dataset

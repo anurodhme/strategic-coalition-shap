@@ -23,7 +23,7 @@ from sklearn.linear_model import LogisticRegression, LinearRegression
 from sklearn.neural_network import MLPClassifier, MLPRegressor
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score, r2_score
-from lowrank_shap import LowRankSHAP
+from strategic_coalition_shap import StrategicCoalitionSHAP
 import os
 
 warnings.filterwarnings('ignore')
@@ -148,7 +148,7 @@ def ablation_study_sampling_strategies():
         try:
             # Our implementation uses strategic sampling by default
             # For this ablation, we'll test different ranks with our current strategy
-            explainer = LowRankSHAP(rank=params['rank'], random_state=42)
+            explainer = StrategicCoalitionSHAP(rank=params['rank'], random_state=42)
             explainer.fit(model.predict_proba, background, verbose=False)
             
             start_time = time.time()
@@ -158,7 +158,7 @@ def ablation_study_sampling_strategies():
             # Calculate consistency across multiple runs
             consistency_scores = []
             for trial in range(3):
-                explainer_trial = LowRankSHAP(rank=params['rank'], random_state=42+trial)
+                explainer_trial = StrategicCoalitionSHAP(rank=params['rank'], random_state=42+trial)
                 explainer_trial.fit(model.predict_proba, background, verbose=False)
                 shap_trial = explainer_trial.explain(test_instances)
                 
@@ -242,7 +242,7 @@ def exact_shap_comparison_study():
                 if rank >= n_features:
                     continue
                     
-                lr_explainer = LowRankSHAP(rank=rank, random_state=42)
+                lr_explainer = StrategicCoalitionSHAP(rank=rank, random_state=42)
                 lr_explainer.fit(model.predict_proba, background, verbose=False)
                 
                 start_time = time.time()
@@ -346,7 +346,7 @@ def comprehensive_dataset_evaluation(datasets):
                     if rank >= X.shape[1]:
                         continue
                     
-                    explainer = LowRankSHAP(rank=rank, random_state=42)
+                    explainer = StrategicCoalitionSHAP(rank=rank, random_state=42)
                     explainer.fit(predict_func, background, verbose=False)
                     
                     start_time = time.time()

@@ -1,10 +1,10 @@
-"""Low-Rank SHAP: Efficient Model-Agnostic Feature Attribution via Randomized SVD.
+"""Strategic Coalition SHAP: Efficient Model-Agnostic Feature Attribution via Coalition Sampling.
 
-This package provides fast approximation of Shapley values using low-rank SVD decomposition
-of the kernel matrix, reducing computational complexity from O(n²) to O(nk).
+This package provides fast approximation of Shapley values using strategic coalition sampling,
+reducing computational complexity from O(n²) to O(mk) where m = rank * 15 coalitions.
 
 Main Classes:
-    LowRankSHAP: Core low-rank SHAP implementation
+    StrategicCoalitionSHAP: Core strategic coalition SHAP implementation
     KernelSHAPBaseline: Baseline exact Kernel SHAP for comparison
 
 Utility Functions:
@@ -14,7 +14,7 @@ Utility Functions:
     benchmark_comparison: Compare exact vs low-rank SHAP performance
 
 Example:
-    >>> from lowrank_shap import LowRankSHAP
+    >>> from strategic_coalition_shap import StrategicCoalitionSHAP
     >>> from sklearn.ensemble import RandomForestClassifier
     >>> from sklearn.datasets import make_classification
     
@@ -23,8 +23,8 @@ Example:
     >>> model = RandomForestClassifier(random_state=42)
     >>> model.fit(X, y)
     
-    >>> # Create and fit Low-Rank SHAP explainer
-    >>> explainer = LowRankSHAP(rank=10)
+    >>> # Create and fit Strategic Coalition SHAP explainer
+    >>> explainer = StrategicCoalitionSHAP(rank=10)
     >>> explainer.fit(model, X[:100])  # Use 100 background samples
     
     >>> # Explain a single instance
@@ -38,7 +38,7 @@ __author__ = "Research Team"
 __email__ = "research@example.com"
 
 # Core implementations
-from .clean_lowrank_shap import LowRankSHAP
+from .clean_strategic_coalition_shap import StrategicCoalitionSHAP
 from .baseline import KernelSHAPBaseline
 
 # Data utilities
@@ -54,7 +54,7 @@ from .benchmark import benchmark_comparison
 
 # Export main API
 __all__ = [
-    "LowRankSHAP",
+    "StrategicCoalitionSHAP",
     "KernelSHAPBaseline", 
     "load_wine_quality",
     "load_adult",

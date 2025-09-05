@@ -16,12 +16,12 @@ import sys
 from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent))
 
-from lowrank_shap import LowRankSHAP, KernelSHAPBaseline, benchmark_comparison
-from lowrank_shap.data_utils import load_wine_data
+from strategic_coalition_shap import StrategicCoalitionSHAP, KernelSHAPBaseline, benchmark_comparison
+from strategic_coalition_shap.data_utils import load_wine_data
 
 
-class TestLowRankSHAP:
-    """Test suite for LowRankSHAP class."""
+class TestStrategicCoalitionSHAP:
+    """Test suite for StrategicCoalitionSHAP class."""
     
     @pytest.fixture
     def sample_data(self):
@@ -44,30 +44,30 @@ class TestLowRankSHAP:
         return model
     
     def test_initialization(self):
-        """Test LowRankSHAP initialization with various parameters."""
+        """Test StrategicCoalitionSHAP initialization with various parameters."""
         # Default initialization
-        explainer = LowRankSHAP()
+        explainer = StrategicCoalitionSHAP()
         assert explainer.rank == 10
         assert explainer.verbose == True
         
         # Custom parameters
-        explainer = LowRankSHAP(rank=5, verbose=False)
+        explainer = StrategicCoalitionSHAP(rank=5, verbose=False)
         assert explainer.rank == 5
         assert explainer.verbose == False
         
         # Invalid rank should raise error
         with pytest.raises(ValueError):
-            LowRankSHAP(rank=0)
+            StrategicCoalitionSHAP(rank=0)
         
         with pytest.raises(ValueError):
-            LowRankSHAP(rank=-1)
+            StrategicCoalitionSHAP(rank=-1)
     
     def test_fit(self, sample_data, trained_model):
         """Test fitting the explainer with background data."""
         X, y = sample_data
         model = trained_model
         
-        explainer = LowRankSHAP(rank=5)
+        explainer = StrategicCoalitionSHAP(rank=5)
         
         # Test successful fit
         explainer.fit(model, X[:50])
@@ -91,7 +91,7 @@ class TestLowRankSHAP:
         X, y = sample_data
         model = trained_model
         
-        explainer = LowRankSHAP(rank=5)
+        explainer = StrategicCoalitionSHAP(rank=5)
         explainer.fit(model, X[:50])
         
         # Explain a single instance
@@ -113,7 +113,7 @@ class TestLowRankSHAP:
         X, y = sample_data
         model = trained_model
         
-        explainer = LowRankSHAP(rank=5)
+        explainer = StrategicCoalitionSHAP(rank=5)
         explainer.fit(model, X[:50])
         
         # Explain multiple instances
@@ -139,7 +139,7 @@ class TestLowRankSHAP:
         ranks = [3, 5, 10, 15]
         
         for rank in ranks:
-            explainer = LowRankSHAP(rank=rank)
+            explainer = StrategicCoalitionSHAP(rank=rank, verbose=True)
             explainer.fit(model, X[:50])
             
             shap_values, metadata = explainer.explain_instance(X[0])
@@ -153,7 +153,7 @@ class TestLowRankSHAP:
         X, y = sample_data
         model = trained_model
         
-        explainer = LowRankSHAP(rank=5)
+        explainer = StrategicCoalitionSHAP(rank=5)
         
         # Test explaining before fitting
         with pytest.raises(AttributeError):
@@ -165,7 +165,7 @@ class TestLowRankSHAP:
         assert len(shap_values) == X.shape[1]
         
         # Test with rank larger than background size
-        explainer = LowRankSHAP(rank=10)
+        explainer = StrategicCoalitionSHAP(rank=10)
         explainer.fit(model, X[:5])  # rank > n_background
         shap_values, metadata = explainer.explain_instance(X[0])
         assert len(shap_values) == X.shape[1]
@@ -298,7 +298,7 @@ class TestIntegration:
         model.fit(X_train, y_train)
         
         # Create explainer
-        explainer = LowRankSHAP(rank=8)
+        explainer = StrategicCoalitionSHAP(rank=8)
         explainer.fit(model, X_train[:50])
         
         # Explain test instances

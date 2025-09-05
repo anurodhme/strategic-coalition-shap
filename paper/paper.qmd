@@ -1,20 +1,20 @@
 ---
-title: "Low-Rank SHAP: Memory-Efficient Shapley Value Approximation via Low-Rank Kernel Decomposition"
-subtitle: "Reducing Kernel SHAP Complexity from O(n²) to O(nk) while Preserving Exact-Quality Explanations"
+title: "Strategic Coalition SHAP: Memory-Efficient Shapley Value Approximation via Strategic Coalition Sampling"
+subtitle: "Reducing Kernel SHAP Complexity from O(n²) to O(mk) while Preserving High-Quality Explanations"
 author:
   - name: "Anurodh Budhathoki"
     affiliation: "[Institution]"
     email: "anurodhme1@gmail.com"
 abstract: |
-  Kernel SHAP is the gold standard for model-agnostic feature attribution but suffers from O(n²) memory complexity, limiting its application to datasets with more than a few thousand samples. We introduce Low-Rank SHAP, a novel method that reduces memory complexity to O(nk) where k ≪ n using strategic coalition sampling and low-rank approximation techniques. Our approach achieves 88-96.6% accuracy compared to exact Kernel SHAP while providing 2.7× to 61× speedup and maintaining O(nk) memory complexity across diverse problem sizes. Through comprehensive evaluation including ground truth validation, theoretical analysis, and real-world case studies, we demonstrate robust performance across regression, classification, and high-dimensional datasets. Low-Rank SHAP is the first method to provide high-quality Shapley value approximations with O(nk) memory complexity while maintaining model-agnostic, open-source implementation. Our method enables SHAP computation on previously infeasible dataset sizes using standard hardware, with formal theoretical guarantees and comprehensive empirical validation.
+  Kernel SHAP is the gold standard for model-agnostic feature attribution but suffers from O(n²) memory complexity, limiting its application to datasets with more than a few thousand samples. We introduce Strategic Coalition SHAP, a novel method that reduces memory complexity to O(mk) where m = rank × 15 coalitions using strategic coalition sampling techniques. Our approach achieves 88-96.6% accuracy compared to exact Kernel SHAP while providing 2.7× to 61× speedup and maintaining O(mk) memory complexity across diverse problem sizes. Through comprehensive evaluation including ground truth validation, theoretical analysis, and real-world case studies, we demonstrate robust performance across regression, classification, and high-dimensional datasets. Strategic Coalition SHAP is the first method to provide high-quality Shapley value approximations with O(mk) memory complexity while maintaining model-agnostic, open-source implementation. Our method enables SHAP computation on previously infeasible dataset sizes using standard hardware, with formal theoretical guarantees and comprehensive empirical validation.
 
 keywords:
   - SHAP
   - Shapley values
   - explainable AI
   - kernel methods
-  - low-rank approximation
-  - SVD
+  - coalition sampling
+  - strategic sampling
   - memory efficiency
   - model interpretability
 
@@ -43,11 +43,11 @@ The central challenge lies in the memory complexity of Kernel SHAP. For n backgr
 
 Recent work has explored various approaches to accelerate SHAP computation, including sampling-based methods [@covert2021improving], surrogate models [@jethani2021fastshap], and specialized algorithms for specific model types [@chen2019shapley]. However, these approaches either sacrifice accuracy, require model-specific implementations, or fail to address the fundamental memory bottleneck. Sampling methods reduce computation time but maintain O(n²) memory complexity. Surrogate approaches like FastSHAP [@jethani2021fastshap] trade model-agnostic properties for efficiency. Model-specific methods like Shapley Net [@zhang2023shapley] are limited to CNNs with closed-source implementations.
 
-We present **Low-Rank SHAP**, a novel method that reduces the memory complexity of Kernel SHAP from O(n²) to O(nk) where k ≪ n, while maintaining high-quality explanations. Our key insight is that strategic coalition sampling proportional to rank can achieve O(nk) complexity while preserving essential Shapley value properties. Through comprehensive validation, we demonstrate 88-96.6% accuracy compared to exact SHAP with significant computational advantages.
+We present **Strategic Coalition SHAP**, a novel method that reduces the memory complexity of Kernel SHAP from O(n²) to O(mk) where m = rank × 15 coalitions, while maintaining high-quality explanations. Our key insight is that strategic coalition sampling proportional to rank can achieve O(mk) complexity while preserving essential Shapley value properties. Through comprehensive validation, we demonstrate 88-96.6% accuracy compared to exact SHAP with significant computational advantages.
 
 Our contributions are:
 
-1. **Novel Algorithm**: We derive Low-Rank SHAP, the first method to achieve O(nk) memory complexity for Kernel SHAP while maintaining 88-96.6% accuracy compared to exact values.
+1. **Novel Algorithm**: We derive Strategic Coalition SHAP, the first method to achieve O(mk) memory complexity for Kernel SHAP while maintaining 88-96.6% accuracy compared to exact values.
 
 2. **Comprehensive Validation**: We conduct ground truth validation, theoretical analysis, enhanced evaluation across diverse datasets, real-world case studies, and ablation studies, demonstrating 2.7× to 61× speedup with <2MB memory usage.
 
@@ -162,7 +162,7 @@ where $W = \text{diag}(\pi(z_1), \ldots, \pi(z_m))$ and $y_i = f(x_i) - \phi_0$.
 
 ## Datasets
 
-We evaluate Low-Rank SHAP on three diverse, real-world datasets representing different application domains and scales:
+We evaluate Strategic Coalition SHAP on three diverse, real-world datasets representing different application domains and scales:
 
 ### Wine Quality Dataset
 - **Samples**: 1,599 red wine samples
@@ -254,7 +254,7 @@ Comprehensive validation demonstrates robust accuracy across problem sizes:
 Significant computational advantages validated:
 
 - **Speedup Range**: 2.7× to 61.1× (exponential with problem size)
-- **Memory Usage**: <2MB across all problem sizes (O(nk) complexity achieved)
+- **Memory Usage**: <2MB across all problem sizes (O(mk) complexity achieved)
 - **Computational Reduction**: Up to 13,981× fewer operations than exact methods
 - **Scalability**: Benefits increase exponentially with feature dimensionality
 
@@ -354,7 +354,7 @@ The memory efficiency enables previously infeasible applications:
 ### Industry Adoption
 Our open-source implementation with pip installation removes barriers to adoption:
 ```bash
-pip install lowrank-shap
+pip install strategic-coalition-shap
 ```
 
 ## Limitations and Future Directions
@@ -398,15 +398,15 @@ We present **Low-Rank SHAP**, a novel method that fundamentally addresses the O(
 
 Our work establishes strategic coalition sampling as a powerful technique for scaling game-theoretic explanation methods, opening new research directions in efficient model interpretation. The validated performance boundaries (88.5-96.6% accuracy) provide clear expectations for practitioners while the exponential computational advantages enable applications previously impossible with exact methods.
 
-**Low-Rank SHAP democratizes model interpretability by making high-quality Shapley value computation practical for real-world applications using standard hardware.** This represents a significant step toward making AI systems more transparent, fair, and accountable across all domains and organizations, with formal guarantees and comprehensive empirical validation.
+**Strategic Coalition SHAP democratizes model interpretability by making high-quality Shapley value computation practical for real-world applications using standard hardware.** This represents a significant step toward making AI systems more transparent, fair, and accountable across all domains and organizations, with formal guarantees and comprehensive empirical validation.
 
 ## Reproducibility Statement
 
 All experiments are fully reproducible using our open-source package:
 
 ```bash
-git clone https://github.com/anurodhbudhathoki/lowrank-shap
-cd lowrank-shap
+git clone https://github.com/anurodhbudhathoki/strategic-coalition-shap
+cd strategic-coalition-shap
 pip install -e .
 
 # Run comprehensive validation (39 tests)
@@ -545,7 +545,7 @@ All code, data, and experimental results are available at: [GitHub repository UR
 The complete experimental pipeline can be reproduced using:
 ```bash
 git clone [repository]
-cd lowrank-shap
+cd strategic-coalition-shap
 make reproduce
 ```
 

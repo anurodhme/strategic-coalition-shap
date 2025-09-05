@@ -11,7 +11,7 @@ import os
 from typing import Dict, List, Any, Tuple, Optional
 
 from .baseline import KernelSHAPBaseline
-from .lowrank_shap import LowRankSHAP
+from .strategic_coalition_shap import StrategicCoalitionSHAP
 
 
 def benchmark_comparison(
@@ -103,8 +103,8 @@ def benchmark_comparison(
         if verbose:
             print(f"\n🚀 Running Low-Rank SHAP (rank={rank})...")
         
-        lr_explainer = LowRankSHAP(rank=rank, verbose=False)
-        lr_explainer.fit(model, X_background)
+        explainer = StrategicCoalitionSHAP(rank=rank, verbose=False)
+        explainer.fit(model, X_background)
         
         # Measure low-rank SHAP performance
         start_time = time.time()
@@ -116,7 +116,7 @@ def benchmark_comparison(
         
         for i, instance in enumerate(X_test):
             instance_start = time.time()
-            shap_vals, metadata = lr_explainer.explain_instance(instance)
+            shap_vals, metadata = explainer.explain_instance(instance)
             instance_time = time.time() - instance_start
             
             lr_shap_values.append(shap_vals)
@@ -273,9 +273,9 @@ def memory_profile_comparison(
         exact_memories.append(exact_meta.get('memory_mb', 0))
         
         # Test low-rank SHAP memory
-        lr_explainer = LowRankSHAP(rank=rank, verbose=False)
-        lr_explainer.fit(model, X_bg_subset)
-        _, lr_meta = lr_explainer.explain_instance(X_test[0])
+        explainer = StrategicCoalitionSHAP(rank=rank, verbose=False)
+        explainer.fit(model, X_bg_subset)
+        _, lr_meta = explainer.explain_instance(X_test[0])
         lr_memories.append(lr_meta.get('memory_mb', 0))
         
         if verbose:

@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 from scipy import stats
 from sklearn.datasets import make_classification
 from sklearn.linear_model import LogisticRegression
-from lowrank_shap import LowRankSHAP
+from strategic_coalition_shap import StrategicCoalitionSHAP
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -107,7 +107,7 @@ def convergence_analysis(n_features_list, ranks, n_trials=5):
             for trial in range(n_trials):
                 try:
                     # Test with different random seeds to measure stability
-                    explainer = LowRankSHAP(rank=rank, random_state=42+trial)
+                    explainer = StrategicCoalitionSHAP(rank=rank, random_state=42+trial)
                     explainer.fit(model.predict_proba, background, verbose=False)
                     
                     import time

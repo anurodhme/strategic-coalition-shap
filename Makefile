@@ -36,15 +36,15 @@ test:
 	python -m pytest tests/ -v
 
 test-coverage:
-	python -m pytest tests/ --cov=lowrank_shap --cov-report=html --cov-report=term
+	python -m pytest tests/ --cov=strategic_coalition_shap --cov-report=html --cov-report=term
 
 # Code quality
 lint:
-	flake8 lowrank_shap/ tests/ scripts/
-	black --check lowrank_shap/ tests/ scripts/
+	flake8 strategic_coalition_shap/ tests/ scripts/
+	black --check strategic_coalition_shap/ tests/ scripts/
 
 format:
-	black lowrank_shap/ tests/ scripts/
+	black strategic_coalition_shap/ tests/ scripts/
 
 # Reproducibility
 reproduce:
@@ -90,8 +90,8 @@ dev-setup: install-dev
 	@echo "Run 'make test' to verify installation"
 
 quick-test:
-	python -c "import lowrank_shap; print('✅ Package imports successfully')"
-	python -c "from lowrank_shap import LowRankSHAP; print('✅ Core classes available')"
+	python -c "import strategic_coalition_shap; print('✅ Package imports successfully')"
+	python -c "from strategic_coalition_shap import StrategicCoalitionSHAP; print('✅ Core classes available')"
 
 # Experiment shortcuts
 run-experiments:

@@ -9,9 +9,9 @@
 5. **RS-SHAP (KDD 2024)** – sampling for speed, not memory.
 6. **Nyström-SHAP pre-print (2023)** – no public code; 32 GB RAM.
 
-## Our Contribution: Low-Rank SHAP
+## Our Contribution: Strategic Coalition SHAP
 
-**Low-Rank SHAP (2024)** – **Addresses all identified gaps simultaneously**:
+**Strategic Coalition SHAP (2024)** – **Addresses all identified gaps simultaneously**:
 
 ### ✅ **Memory Efficiency** (vs. SHAP 2017)
 - **O(nk) instead of O(n²)** where k ≪ n
@@ -75,7 +75,7 @@ We conducted systematic searches across:
 #### **Direct Competitor Analysis**
 **No existing paper combines all four key elements of our approach:**
 
-1. **❌ No Low-Rank SHAP**: No papers found on "low-rank SHAP" OR "SVD SHAP" OR "low-rank approximation SHAP"
+1. **❌ No Strategic Coalition SHAP**: No papers found on "strategic coalition SHAP" OR "coalition sampling SHAP" OR "rank-proportional SHAP"
 2. **❌ No Memory-Focused SHAP**: No papers addressing O(n²) → O(nk) memory complexity for Kernel SHAP
 3. **❌ No Model-Agnostic Low-Rank**: All existing low-rank methods are model-specific (CNNs, NNs)
 4. **❌ No Open-Source Implementation**: No public code for low-rank SHAP approximation
@@ -93,7 +93,7 @@ We conducted systematic searches across:
 ### **Novelty Confirmation**
 
 #### **Our Unique Combination**
-**Low-Rank SHAP is the first method to provide:**
+**Strategic Coalition SHAP is the first method to provide:**
 
 1. **✅ O(nk) memory complexity** for Kernel SHAP (vs. O(n²))
 2. **✅ Model-agnostic implementation** (works with any ML model)
@@ -117,7 +117,7 @@ We conducted systematic searches across:
 
 ### **Conclusion: Novel Contribution**
 
-**Based on comprehensive literature analysis, Low-Rank SHAP represents a novel contribution that:**
+**Based on comprehensive literature analysis, Strategic Coalition SHAP represents a novel contribution that:**
 
 1. **Addresses an unmet need**: O(n²) memory bottleneck in Kernel SHAP
 2. **Provides unique solution**: Low-rank SVD approximation with theoretical guarantees
@@ -126,5 +126,5 @@ We conducted systematic searches across:
 
 **No existing method provides exact-quality Shapley value approximations with O(nk) memory complexity while maintaining model-agnostic, open-source implementation.**
 
-This establishes **Low-Rank SHAP as a genuine novel contribution** to the field of explainable AI.
+This establishes **Strategic Coalition SHAP as a genuine novel contribution** to the field of explainable AI.
 7. **Gap**: No open-source tool gives O(nk) memory & model-agnostic Shapley on ≤8 GB.

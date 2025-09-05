@@ -1,4 +1,4 @@
-# Low-Rank SHAP: Mathematical Derivation
+# Strategic Coalition SHAP: Mathematical Derivation
 
 ## Problem Setup
 
@@ -51,7 +51,7 @@ $$\phi_{\text{low-rank}} = V_k \Sigma_k^{-1} U_k^\top y$$
 | Method | Time Complexity | Memory Complexity |
 |--------|----------------|------------------|
 | Exact Kernel SHAP | $O(n^3)$ | $O(n^2)$ |
-| Low-Rank SHAP | $O(nk^2 + nk)$ | $O(nk)$ |
+| Strategic Coalition SHAP | $O(mk^2 + mk)$ | $O(mk)$ |
 
 ## Error Analysis
 

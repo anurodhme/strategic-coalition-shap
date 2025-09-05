@@ -34,7 +34,7 @@ We evaluated four diverse model architectures to ensure our method's generalizab
 
 *Note: Some combinations excluded due to computational constraints or convergence issues*
 
-## Low-Rank SHAP Performance
+## Strategic Coalition SHAP Performance
 
 ### Experimental Setup
 - **Background Samples**: 100 instances per dataset
@@ -46,7 +46,7 @@ We evaluated four diverse model architectures to ensure our method's generalizab
 ### Key Results
 
 #### Approximation Quality
-Our Low-Rank SHAP method achieves exceptional approximation quality:
+Our Strategic Coalition SHAP method achieves exceptional approximation quality:
 
 - **Relative Error**: < 0.01% across all experiments
 - **Consistency**: High accuracy maintained across different ranks
@@ -79,7 +79,7 @@ SVD Convergence Rate: 100% (robust fallback strategies effective)
 
 #### Memory Efficiency Analysis
 - **Exact Kernel SHAP**: O(n²) memory complexity
-- **Low-Rank SHAP**: O(nk) memory complexity  
+- **Strategic Coalition SHAP**: O(mk) memory complexity  
 - **Practical Reduction**: 60-90% memory savings observed
 - **Peak Usage**: Maximum 207MB for largest dataset (32K samples)
 
@@ -110,7 +110,7 @@ Comprehensive error characterization:
 - **Memory**: Baseline (1.0x)
 - **Scalability**: Limited by O(n²) complexity
 
-### Low-Rank SHAP (Our Method)
+### Strategic Coalition SHAP (Our Method)
 - **Accuracy**: >99.99% of exact values
 - **Runtime**: 2-10x faster
 - **Memory**: 0.1-0.4x usage
@@ -160,7 +160,7 @@ Complete experimental pipeline includes:
 
 ## Summary
 
-Our experimental validation demonstrates that Low-Rank SHAP provides:
+Our experimental validation demonstrates that Strategic Coalition SHAP provides:
 
 1. **High Accuracy**: >99.99% fidelity to exact Kernel SHAP
 2. **Significant Speedup**: 2-10x runtime improvement
@@ -168,4 +168,4 @@ Our experimental validation demonstrates that Low-Rank SHAP provides:
 4. **Robust Implementation**: 100% success rate across diverse scenarios
 5. **Practical Impact**: Enables SHAP computation on larger datasets
 
-These results establish Low-Rank SHAP as a practical solution for efficient Shapley value computation in real-world applications.
+These results establish Strategic Coalition SHAP as a practical solution for efficient Shapley value computation in real-world applications.

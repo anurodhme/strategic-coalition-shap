@@ -19,7 +19,7 @@ from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
-from lowrank_shap import LowRankSHAP
+from strategic_coalition_shap import StrategicCoalitionSHAP
 import matplotlib.pyplot as plt
 import os
 
@@ -209,7 +209,7 @@ def credit_risk_shap_analysis(model_results, feature_names):
             print(f"  Testing rank {rank}...")
             
             try:
-                explainer = LowRankSHAP(rank=rank, random_state=42)
+                explainer = StrategicCoalitionSHAP(rank=rank, random_state=42)
                 explainer.fit(model.predict_proba, background, verbose=False)
                 
                 start_time = time.time()
@@ -319,7 +319,7 @@ def scalability_demonstration():
         
         for rank in [5, 10]:
             try:
-                explainer = LowRankSHAP(rank=rank, random_state=42)
+                explainer = StrategicCoalitionSHAP(rank=rank, random_state=42)
                 explainer.fit(model.predict_proba, background, verbose=False)
                 
                 start_time = time.time()
